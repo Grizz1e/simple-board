@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Infinite Sketchboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+
+    <!-- Context Menu -->
+    <div id="contextMenu" class="hidden">
+        <div class="dropdown">
+            <div class="dropdown-title">Tools ▼</div>
+            <div class="dropdown-content">
+                <div class="menu-item" data-tool="pencil">✏️ Pencil</div>
+                <div class="menu-item" data-tool="text">🔤 Text</div>
+                <div class="menu-item" data-tool="select">🔧 Select / Move</div>
+                <div class="menu-item" data-tool="eraser">🧽 Eraser</div>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <div class="dropdown-title">Shapes ▼</div>
+            <div class="dropdown-content">
+                <div class="menu-item" data-tool="shape-rect">▭ Rectangle</div>
+                <div class="menu-item" data-tool="shape-circle">◯ Circle</div>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <div class="dropdown-title">Colors ▼</div>
+            <div class="dropdown-content">
+                <div class="color-row">
+                    <div class="color-swatch" data-color="#000000" style="background:#000"></div>
+                    <div class="color-swatch" data-color="#ff5252" style="background:#ff5252"></div>
+                    <div class="color-swatch" data-color="#ffb300" style="background:#ffb300"></div>
+                    <div class="color-swatch" data-color="#00c853" style="background:#00c853"></div>
+                    <div class="color-swatch" data-color="#2962ff" style="background:#2962ff"></div>
+                </div>
+                <input type="color" id="customColor">
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <div class="dropdown-title">Thickness ▼</div>
+            <div class="dropdown-content">
+                <div class="menu-item thickness-item" data-thick="2">Thin</div>
+                <div class="menu-item thickness-item" data-thick="5">Medium</div>
+                <div class="menu-item thickness-item" data-thick="10">Thick</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+html,
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #fdfdfd;
+}
+
+#canvas {
+    display: block;
+    cursor: crosshair;
+}
+
+/* Context Menu */
+#contextMenu {
+    position: fixed;
+    background: white;
+    border: 2px solid #000;
+    width: 220px;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 4px 4px 0px #000;
+    font-family: "Handlee", cursive;
+    z-index: 9999;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Dropdown */
+.dropdown {
+    margin-bottom: 10px;
+}
+
+.dropdown-title {
+    font-weight: bold;
+    cursor: pointer;
+    padding: 6px;
+    border: 2px solid #000;
+    border-radius: 5px;
+    background: #fafafa;
+}
+
+.dropdown-content {
+    display: none;
+    padding-top: 6px;
+}
+
+.dropdown.open .dropdown-content {
+    display: block;
+}
+
+/* Items */
+.menu-item {
+    padding: 6px;
+    border: 2px solid #000;
+    border-radius: 5px;
+    margin: 3px 0;
+    cursor: pointer;
+    background: #fff;
+}
+
+.menu-item:hover {
+    background: #ffe082;
+}
+
+.color-row {
+    display: flex;
+    gap: 6px;
+}
+
+.color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    cursor: pointer;
+}
+
+/* caret for text tool */
+.text-caret {
+    position: absolute;
+    width: 2px;
+    background: black;
+    animation: blink .8s infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+/* highlight for eraser */
+.eraser-highlight {
+    stroke: red !important;
+    opacity: 0.4;
+}
