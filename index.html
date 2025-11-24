@@ -2,60 +2,97 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <title>Infinite Sketchboard</title>
-    <link rel="stylesheet" href="style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Material+Icons" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Patrick+Hand&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
-    <canvas id="canvas"></canvas>
+    <div id="app">
+        <canvas id="canvas"></canvas>
 
-    <!-- Context Menu -->
-    <div id="contextMenu" class="hidden">
-        <div class="dropdown">
-            <div class="dropdown-title">Tools ▼</div>
-            <div class="dropdown-content">
-                <div class="menu-item" data-tool="pencil">✏️ Pencil</div>
-                <div class="menu-item" data-tool="text">🔤 Text</div>
-                <div class="menu-item" data-tool="select">🔧 Select / Move</div>
-                <div class="menu-item" data-tool="eraser">🧽 Eraser</div>
+        <!-- Hidden Text Input -->
+        <textarea id="text-input" class="hidden"></textarea>
+
+        <!-- Top Left Settings Overlay -->
+        <div id="settings-overlay" class="panel">
+            <div class="panel-header">TOOLS</div>
+            <div id="tool-settings">
+                <!-- Dynamic settings will be injected here -->
+            </div>
+            <div id="current-tool-display">Tool: <span>Select</span></div>
+
+            <div class="actions-row">
+                <button id="undo-btn" title="Undo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 7v6h6"></path>
+                        <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path>
+                    </svg>
+                </button>
+                <button id="redo-btn" title="Redo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 7v6h-6"></path>
+                        <path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"></path>
+                    </svg>
+                </button>
+                <button id="save-btn" title="Save">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                </button>
+                <button id="load-btn" title="Load">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </button>
             </div>
         </div>
 
-        <div class="dropdown">
-            <div class="dropdown-title">Shapes ▼</div>
-            <div class="dropdown-content">
-                <div class="menu-item" data-tool="shape-rect">▭ Rectangle</div>
-                <div class="menu-item" data-tool="shape-circle">◯ Circle</div>
+        <!-- Custom Color Picker -->
+        <div id="color-picker-modal" class="hidden">
+            <div class="color-grid">
+                <!-- Presets -->
+                <div class="color-swatch" style="background: #000000" data-color="#000000"></div>
+                <div class="color-swatch" style="background: #ffffff" data-color="#ffffff"></div>
+                <div class="color-swatch" style="background: #ff0000" data-color="#ff0000"></div>
+                <div class="color-swatch" style="background: #00ff00" data-color="#00ff00"></div>
+                <div class="color-swatch" style="background: #0000ff" data-color="#0000ff"></div>
+                <div class="color-swatch" style="background: #ffff00" data-color="#ffff00"></div>
+                <div class="color-swatch" style="background: #00ffff" data-color="#00ffff"></div>
+                <div class="color-swatch" style="background: #ff00ff" data-color="#ff00ff"></div>
+                <div class="color-swatch" style="background: transparent; border: 2px dashed #000;"
+                    data-color="transparent" title="Transparent"></div>
+            </div>
+            <div class="custom-color-input">
+                <input type="color" id="custom-color-picker">
+                <label for="custom-color-picker">Custom</label>
             </div>
         </div>
 
-        <div class="dropdown">
-            <div class="dropdown-title">Colors ▼</div>
-            <div class="dropdown-content">
-                <div class="color-row">
-                    <div class="color-swatch" data-color="#000000" style="background:#000"></div>
-                    <div class="color-swatch" data-color="#ff5252" style="background:#ff5252"></div>
-                    <div class="color-swatch" data-color="#ffb300" style="background:#ffb300"></div>
-                    <div class="color-swatch" data-color="#00c853" style="background:#00c853"></div>
-                    <div class="color-swatch" data-color="#2962ff" style="background:#2962ff"></div>
-                </div>
-                <input type="color" id="customColor">
-            </div>
-        </div>
-
-        <div class="dropdown">
-            <div class="dropdown-title">Thickness ▼</div>
-            <div class="dropdown-content">
-                <div class="menu-item thickness-item" data-thick="2">Thin</div>
-                <div class="menu-item thickness-item" data-thick="5">Medium</div>
-                <div class="menu-item thickness-item" data-thick="10">Thick</div>
-            </div>
+        <!-- Context Menu (Hidden by default) -->
+        <div id="context-menu" class="hidden">
+            <div class="menu-item" data-tool="select">Select / Move</div>
+            <div class="menu-item" data-tool="pan">Pan Canvas</div>
+            <div class="menu-separator"></div>
+            <div class="menu-item" data-tool="pen">Pen</div>
+            <div class="menu-item" data-tool="rect">Rectangle</div>
+            <div class="menu-item" data-tool="circle">Circle</div>
+            <div class="menu-item" data-tool="text">Text</div>
         </div>
     </div>
-
-    <script src="main.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
