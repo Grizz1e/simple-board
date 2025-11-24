@@ -211,6 +211,20 @@ if (savedData) {
     }
 }
 
+
+const savedView = localStorage.getItem('boardView');
+if (savedView) {
+    try {
+        state.view = JSON.parse(savedView);
+    } catch (e) {
+        console.error("Failed to load saved view", e);
+    }
+}
+
+function saveView() {
+    localStorage.setItem('boardView', JSON.stringify(state.view));
+}
+
 // --- Coordinate Systems ---
 // Screen to World
 function toWorld(x, y) {
@@ -627,6 +641,7 @@ canvas.addEventListener('mousemove', e => {
         if (state.tool === 'pan' || state.isSpacePressed || e.buttons === 4) {
             state.view.x += dx;
             state.view.y += dy;
+            saveView();
         } else if (state.isDrawing) {
             if (state.tool === 'rect' || state.tool === 'circle') {
                 state.currentDraft.width = worldPos.x - state.currentDraft.x;
@@ -693,6 +708,8 @@ canvas.addEventListener('mouseup', () => {
     if (state.isDragging && state.tool === 'select' && state.selection && !state.isResizing) {
         // Moved object
         saveState();
+    } else if (state.isDragging && (state.tool === 'pan' || state.isSpacePressed)) {
+        saveView();
     }
 
     if (state.isResizing) {
@@ -979,6 +996,7 @@ canvas.addEventListener('wheel', e => {
     state.view.x -= mouseX * (zoomFactor - 1);
     state.view.y -= mouseY * (zoomFactor - 1);
     state.view.zoom *= zoomFactor;
+    saveView();
 }, { passive: false });
 
 // Context Menu
