@@ -390,6 +390,19 @@ function drawElement(el) {
         ctx.fillText(el.text || "Text", 0, 0);
 
         ctx.restore();
+    } else if (el.type === 'image') {
+        if (el.imgElement) {
+            ctx.drawImage(el.imgElement, el.x, el.y, el.width, el.height);
+        } else {
+            // Load image if not loaded
+            const img = new Image();
+            img.src = el.data;
+            img.onload = () => {
+                el.imgElement = img;
+                draw();
+            };
+            // Draw placeholder or nothing while loading
+        }
     }
 
     ctx.restore();
@@ -459,7 +472,7 @@ function getHandleCoords(bounds, pad) {
 }
 
 function getBounds(el) {
-    if (el.type === 'rect' || el.type === 'circle' || el.type === 'text') {
+    if (el.type === 'rect' || el.type === 'circle' || el.type === 'text' || el.type === 'image') {
         return { x: el.x, y: el.y, width: el.width, height: el.height };
     } else if (el.type === 'pen') {
         // Calculate bounds for pen path
@@ -1002,6 +1015,81 @@ function isHit(el, pos) {
     return pos.x >= bounds.x && pos.x <= bounds.x + bounds.width &&
         pos.y >= bounds.y && pos.y <= bounds.y + bounds.height;
 }
+
+// --- Image Handling ---
+
+function handleImageUpload(file, x, y) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+            // Calculate dimensions to fit reasonably
+            let width = img.width;
+            let height = img.height;
+            const maxSize = 300;
+            if (width > height) {
+                if (width > maxSize) {
+                    height *= maxSize / width;
+                    width = maxSize;
+                }
+            } else {
+                if (height > maxSize) {
+                    width *= maxSize / height;
+                    height = maxSize;
+                }
+            }
+
+            state.elements.push({
+                type: 'image',
+                x: x - width / 2,
+                y: y - height / 2,
+                width: width,
+                height: height,
+                data: e.target.result,
+                rotation: 0,
+                imgElement: img // Cache the image element
+            });
+            saveState();
+            draw();
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+// Drag and Drop
+canvas.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+});
+
+canvas.addEventListener('drop', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const worldPos = toWorld(e.clientX, e.clientY);
+
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        const file = e.dataTransfer.files[0];
+        if (file.type.startsWith('image/')) {
+            handleImageUpload(file, worldPos.x, worldPos.y);
+        }
+    }
+});
+
+// Paste
+window.addEventListener('paste', (e) => {
+    const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+    for (let index in items) {
+        const item = items[index];
+        if (item.kind === 'file' && item.type.startsWith('image/')) {
+            const blob = item.getAsFile();
+            // Paste at center of view
+            const center = toWorld(canvas.width / 2, canvas.height / 2);
+            handleImageUpload(blob, center.x, center.y);
+        }
+    }
+});
 
 // Initial Draw
 draw();
